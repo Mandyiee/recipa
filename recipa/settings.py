@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'recipa.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'RECIPE_SITE',
-#         'USER':'postgres',
-#         'PASSWORD':'okonkwo101#',
-#         'HOST':'localhost',
-#         'PORT':'5432'
+#         'NAME': '',
+#         'USER':'',
+#         'PASSWORD':'',
+#         'HOST':'',
+#         'PORT':''
 #     }
 # }
 
