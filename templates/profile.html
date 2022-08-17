@@ -1,0 +1,130 @@
+{% extends 'main.html' %} {% block content %} {% load static %}
+
+<!--Page Title-->
+<!-- <section class="page-title" style="background-image:url(/static/images/background/10.jpg)">
+    <div class="auto-container">
+        <h1>author details</h1>
+    </div>
+</section> -->
+<!--End Page Title-->
+
+<!-- Author Details Start -->
+<section class="author-details-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="author-details-col p-0">
+                    <div class="author-details-img">
+                        <img src="{{ profile.profileimg.url}}" alt="" class="img-fluid" style="border: 2px solid #044040">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="author-details-col author-details-content rounded">
+
+                    {% if profile.user.username == request.user.username %}
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+
+                        <div style="height: 50px;width:50px;background:white;display:grid;place-items:center;" class="rounded-circle">
+                            <a href="/settings" style="height: 40px;width:40px;display:block;"><img src="{% static '/images/edit.svg' %}" style="height: 100%;width:100%;" class="rounded-circle" alt=""></a>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <h2>{{ profile.user.get_full_name | upper}}</h2>
+                    <h3 class="pb-2">@{{ profile.user.username | title}}</h3>
+                    <h4>{{ profile.job|capfirst }}</h4>
+                    <p>{{ profile.bio|capfirst }}.</p>
+                    <ul class="author-info">
+                        <li><i class="fa fa-envelope-o" aria-hidden="true"></i> {{ profile.user.email }}</li>
+
+                        {% if profile.phonenumber != None %}
+                        <li><i class="fa fa-phone" aria-hidden="true"></i>{{ profile.phonenumber }}</li>
+                        {% endif %} {% if profile.location != None %}
+                        <li><i class="fa fa-map-marker" aria-hidden="true"></i>{{ profile.location }}</li>
+                        {% endif %}
+
+
+
+                    </ul>
+                    <ul class="social-links">
+
+                        {% if profile.facebook != None %}
+                        <li><a href="{{profile.facebook}}"><span class="fa fa-facebook-f"></span></a></li>
+                        {% endif %} {% if profile.instagram != None %}
+                        <li><a href="{{profile.instagram}}"><span class="fa fa-instagram"></span></a></li>
+
+                        {% endif %} {% if profile.twitter != None %}
+                        <li><a href="{{profile.twitter}}"><span class="fa fa-twitter"></span></a></li>
+                        {% endif %} {% if profile.youtube != None %}
+                        <li><a href="{{profile.youtube}}"><span class="fa fa-youtube-play"></span></a></li>
+                        {% endif %}
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Recipes Section -->
+<section class="popular-recipes-section style-three recipes-three-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sec-title">
+                    <div class="clearfix">
+                        <div class="text-center">
+                            <h2>More Recipes by this Author</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-lg-12 recipes-block">
+
+                {% for recipe in recipes %}
+                <div class="con rounded">
+                    <div class="image con-1">
+                        <a href="/recipe/{{ recipe.id }}"><img src="{{ recipe.image.url }}" class="img rounded-start" alt="" /></a>
+                    </div>
+                    <div class="con-2">
+                        <div class="category">
+
+                            {% for tag in recipe.tag.all%} <a href="/category/{{tag}}">{{ tag | upper }}</a>{% endfor %}
+
+                        </div>
+                        <h3><a href="/recipe/{{ recipe.id }}" class="card-title" style="color:black;">{{ recipe.title | title}}</a></h3>
+
+                        <p class="card-text">{{ recipe.description }}</p>
+
+                        <div class="container" style="width:100%;">
+                            <div class="row">
+                                <div class="col-12 text-center"><span class="icon flaticon-dish"></span>{{ recipe.ingredient_total }} Ingredient{{ recipe.ingredient_total|pluralize }}</div>
+                                <div class="col-6 text-center"><span class="icon flaticon-clock-3"></span>{{ recipe.cooktime }} Min{{ recipe.cooktime|pluralize }}</div>
+                                <div class="col-6 text-center"><span class="icon flaticon-business-and-finance"></span>{{ recipe.people }} {{ recipe.people|pluralize:"Person,People" }}</div>
+
+                            </div>
+                        </div>
+                        <p class="card-text"><small class="text-muted"> Created at {{ recipe.date_created }}</small></p>
+
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Popular Recipes Section -->
+
+
+
+
+
+{% endblock content %}

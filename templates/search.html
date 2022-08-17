@@ -1,0 +1,88 @@
+{% extends 'main.html' %} {% block content %} {% load static %}
+
+
+
+<!-- Product Form Section -->
+<section class="popular-recipes-section style-three recipes-three-area" style="padding-top: 145px;">
+
+
+
+
+    <!-- Default Form -->
+    <div class="default-form rounded">
+        <form method="POST" action="/search">
+            {% csrf_token %}
+            <div class="form-con">
+
+                <!-- Form Group -->
+                <div class="form-group">
+                    <select name="search-opt" class="custom-select-box">
+                                        <option value="recipe">Recipes</option>
+                                        <option value="username">Username</option>
+                                        <option value="tag">Tags</option>
+    
+                                    </select>
+                </div>
+
+                <!-- Form Group -->
+                <div class="form-group">
+                    <input type="text" name="search-value" placeholder="Recipe Kayword" required>
+                </div>
+
+                <div class="search-group">
+                    <button type="submit" class="theme-btn search-btn"><span class="fa fa-search"></span></button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+
+
+
+    <div class="container">
+        <div class="row clearfix">
+
+
+            {% for recipe in recipes %}
+            <div class="con rounded">
+                <div class="image con-1">
+                    <a href="recipe/{{ recipe.id }}"><img src="{{ recipe.image.url }}" class="img rounded-start" alt="" /></a>
+                </div>
+                <div class="con-2">
+                    <div class="category">
+
+                        {% for tag in recipe.tag.all%} <a href="/category/{{tag}}">{{ tag | upper }}</a>{% endfor %}
+
+                    </div>
+                    <h4><a href="recipe/{{ recipe.id }}" class="card-title " style="color:black;">{{ recipe.title | title}}</a> <span style="font-size:15px;color:#414141;"><a href="/profile/{{ recipe.user}}" style="color:#414141;">By {{ recipe.user|title }}</a></span></h4>
+
+                    <p class="card-text">{{ recipe.description }}</p>
+
+                    <div class="container" style="width:100%;">
+                        <div class="row">
+                            <div class="col-12 text-center"><span class="icon flaticon-dish"></span>{{ recipe.ingredient_total }} Ingredient{{ recipe.ingredient_total|pluralize }}</div>
+                            <div class="col-6 text-center"><span class="icon flaticon-clock-3"></span>{{ recipe.cooktime }} Min{{ recipe.cooktime|pluralize }}</div>
+                            <div class="col-6 text-center"><span class="icon flaticon-business-and-finance"></span>{{ recipe.people }} {{ recipe.people|pluralize:"Person,People" }}</div>
+
+                        </div>
+                    </div>
+                    <p class="card-text"><small class="text-muted"> Created at {{ recipe.date_created }}</small></p>
+
+                </div>
+            </div>
+            {% empty %}
+
+            <h1 class="mx-auto py-5">No recipes, Try another search option</h1>
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+
+</section>
+<!-- End Entertaining Section -->
+
+
+{% endblock content %}

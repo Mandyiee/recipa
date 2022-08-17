@@ -1,0 +1,211 @@
+{% extends 'main.html' %} {% block content %} {% load static %}
+
+
+<!--Page Title-->
+<!-- <section class="page-title" style="background-image:url(images/background/10.jpg)">
+    <div class="auto-container">
+        <h1>Add recipe</h1>
+    </div>
+</section> -->
+<!--End Page Title-->
+
+<!-- Add recipe Start -->
+<section class="add-recipe-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="add-recipe-col">
+                    <h4>Please fill up all fields for submit a recipe</h4>
+                    <form method="POST" enctype="multipart/form-data" action="add">
+                        {% csrf_token %}
+                        <div class="form-group mb-4">
+                            <label>Recipe Title</label>
+                            <input type="text" class="form-control" name="title" placeholder="Example: Hamburger Steak with Onions" required>
+
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>recipe description</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name="description" minlength="150" required placeholder="Write Here..."></textarea>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>Add a image</label>
+                            <img src="#" accept="image/*" type='file' id="placeholder-img" alt="" style="width: 100%;height: 100px;">
+                            <input type="file" name="image" class="form-control-file" id="imgInp" required>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>Tags</label>
+                            <div class="tagCon">
+                                <input type="text" class="form-control" name="tag" placeholder="Example: Pizza, Burger, Fried Rice" required>
+
+                            </div>
+                            <a href="javascript:void(0)" class="load-more__btn tag-button" onclick="addTag()">Add Tag</a>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>Video Url</label>
+                            <input type="text" class="form-control" name="video_url" placeholder="For example: https://www.youtube.com/embed/sv3TXMSv6Lw">
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group mb-4">
+                                    <label>Add Directions</label>
+                                    <div class="loadmore direction">
+                                        <textarea class="form-control load-item" required id="exampleFormControlTextarea1" name="directions" rows="3" placeholder="Write Here..."></textarea>
+                                        <!-- <a href="#" class="load-more__btn">Add Field</a> -->
+                                    </div>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="addDirections()">Add Field</a>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="removeDirections()">Remove Field</a>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group mb-4">
+                                    <label>Add Ingredients</label>
+                                    <table class="loadmore ingredient">
+                                        <tr class="load-item">
+                                            <td>
+                                                <span>Ingredient Name</span>
+                                                <input type="text" name="ingredient_name" class="form-control" placeholder="pepper" required>
+                                            </td>
+                                            <td>
+                                                <span>Ingredient Amount</span>
+                                                <input type="text" class="form-control" name="ingredient_amount" placeholder="2 small" required>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="addIngredients()">Add Field</a>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="removeIngredients()">Remove Field</a>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group mb-4">
+                                    <label>Add Nutrition</label>
+                                    <table class="loadmore nutrition">
+                                        <tr class="load-item">
+                                            <td>
+                                                <input type="text" class="form-control" name="nutrition_name" placeholder="calories">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="nutrition_amount" placeholder="100g">
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="addNutritions()">Add Field</a>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="removeNutritions()">Remove Field</a>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-4">
+                                    <label>Peoples</label>
+                                    <input type="number" class="form-control ingredients-number" name="people" id="myNumber" value="0" min="0" max="100" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-4">
+                                    <label>Cook Time</label>
+                                    <input type="number" class="form-control ingredients-number m-0" name="cooktime" id="myNumber" value="0" min="0" max="1000" required>
+                                    <span>Minutes</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-primary theme-btn btn-style-one" type="submit"><span>Submit Recipe</span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function addDirections() {
+        let con = document.querySelector('.direction')
+        let ele = document.createElement('textarea')
+        ele.setAttribute('class', 'form-control load-item')
+        ele.setAttribute('id', 'exampleFormControlTextarea1')
+        ele.setAttribute('name', 'directions')
+        ele.setAttribute('placeholder', 'Write Here...')
+        ele.setAttribute('required', 'true')
+        ele.setAttribute('rows', '3')
+        con.appendChild(ele)
+    }
+
+    function removeDirections() {
+        let con = document.querySelector('.direction')
+        con.removeChild(con.lastChild);
+    }
+
+    function addIngredients() {
+        let con = document.querySelector('.ingredient')
+        let ele = document.createElement('tr')
+        ele.setAttribute('class', 'load-item')
+        ele.innerHTML = `
+        <td>
+            <span>Ingredient Name</span>
+            <input type="text" class="form-control" name="ingredient_name" placeholder=" ">
+        </td>
+        <td>
+            <span>Ingredient Amount</span>
+            <input type="text" class="form-control" name="ingredient_amount" placeholder=" ">
+        </td>
+        `
+        con.appendChild(ele)
+    }
+
+    function removeIngredients() {
+        let con = document.querySelector('.ingredient')
+        con.removeChild(con.lastChild);
+    }
+
+    function addNutritions() {
+        let con = document.querySelector('.nutrition')
+        let ele = document.createElement('tr')
+        ele.setAttribute('class', 'load-item')
+        ele.innerHTML = `
+        <td>
+            <input type="text" class="form-control" name="nutrition_name" placeholder=" ">
+        </td>
+        <td>
+            <input type="text" class="form-control" name="nutrition_amount" placeholder=" ">
+        </td>
+        `
+        con.appendChild(ele)
+    }
+
+    function removeNutritions() {
+        let con = document.querySelector('.nutrition')
+        con.removeChild(con.lastChild);
+    }
+
+    function addTag() {
+        let con = document.querySelector('.tagCon')
+        if (con.children.length < 4) {
+            let ele = document.createElement('input')
+            ele.setAttribute('type', 'text')
+            ele.setAttribute('name', 'tag')
+            ele.setAttribute('class', 'form-control')
+            ele.setAttribute('placeholder', 'pizza')
+            con.appendChild(ele)
+        } else {
+            let button = document.querySelector('.tag-button')
+            button.style.display = 'none'
+        }
+
+    }
+    let imgInp = document.getElementById('imgInp')
+    let place = document.getElementById('placeholder-img')
+    imgInp.onchange = evt => {
+        const [file] = imgInp.files
+        if (file) {
+            place.src = URL.createObjectURL(file)
+        }
+    }
+</script>
+
+
+
+{% endblock content %}

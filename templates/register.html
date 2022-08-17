@@ -1,0 +1,68 @@
+{% extends 'main.html' %} {% block content %} {% load static %}
+
+<style>
+    .form-control:focus {
+        border: 1px solid #044040;
+        box-shadow: 1px 1px 2px #044040;
+    }
+</style>
+
+<div class="register-container" style="padding-top: 155px;">
+    <div class="auto-container" style="width: min(90%,850px);">
+
+
+
+        <div class="register-form card" style="padding:35px 25px;box-shadow:2px 2px 1px rgba(0,0,0,0.25);">
+            <h2 class="text-center">Register</h2>
+            {% for message in messages %}
+            <h5 class="text-center" style="color: red;">{{message}}</h5>
+            {% endfor %}
+
+
+            <form method="POST" class="" action="register">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="input1" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="input1" name="username" placeholder="User Name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="input2" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="input2" name="first_name" placeholder="First Name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="input3" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="input3" name="last_name" placeholder="Last Name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="input4" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="input4" name="email" placeholder="Email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="input5" class="form-label">Password</label>
+                    <input type="password" name="password" placeholder="Password" required class="form-control" id="input5">
+                </div>
+                <div class="mb-3">
+                    <label for="input6" class="form-label">Password2</label>
+                    <input class="form-control" id="input6" type="password" name="password2" placeholder="Password2" required>
+                </div>
+
+
+                <div class="form-group">
+                    <button class="theme-btn btn-style-one" type="submit" name="submit-form"><span class="txt">Register</span></button> Already have an account? <a href="/login">Log In</a>
+                </div>
+
+            </form>
+
+        </div>
+        <!-- End Register Form -->
+
+    </div>
+</div>
+
+
+<!-- End Register Container -->
+
+
+{% endblock content %}

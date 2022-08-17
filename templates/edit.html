@@ -1,0 +1,238 @@
+{% extends 'main.html' %} {% block content %} {% load static %}
+
+
+
+<!-- Add recipe Start -->
+<section class="add-recipe-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="add-recipe-col">
+                    <h4>Please fill up all fields for submit a recipe</h4>
+                    <form method="POST" enctype="multipart/form-data" action="/edit/{{recipe.id}}/">
+                        {% csrf_token %}
+                        <div class="form-group mb-4">
+                            <label>Recipe Title</label>
+                            <input type="text" class="form-control" name="title" value="{{ recipe.title }}" placeholder="Example: Hamburger Steak with Onions">
+
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>recipe description</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" name="description" placeholder="Write Here...">{{ recipe.description }}</textarea>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>Add a image</label>
+                            <img src="{{ recipe.image.url }}" accept="image/*" type='file' id="placeholder-img" alt="" style="width: 100%;height: 100px;">
+                            <input type="file" name="image" class="form-control-file" id="imgInp" required>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>Tags</label>
+                            <div class="tagCon">
+                                {% for tag in recipe.tag.all%}
+                                <input type="text" class="form-control" name="tag" value="{{tag}}" placeholder="Example: Pizza, Burger, Fried Rice"> {% endfor %}
+                            </div>
+                            <a href="javascript:void(0)" class="load-more__btn tag-button" onclick="addTag()">Add Tag</a>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>Video Url</label>
+                            <input type="text" class="form-control" name="video_url" value="{{ recipe.video_url }}" placeholder="For example: https://www.youtube.com/embed/sv3TXMSv6Lw">
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group mb-4">
+                                    <label>Add Directions</label> {% for direction in recipe.directions.direction %}
+                                    <div class="loadmore direction">
+                                        <textarea class="form-control load-item" id="exampleFormControlTextarea1" name="directions" rows="3" placeholder="Write Here...">{{ direction }}</textarea>
+                                        <!-- <a href="#" class="load-more__btn">Add Field</a> -->
+                                    </div>
+                                    {% endfor %}
+
+
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="addDirections()">Add Field</a>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="removeDirections()">Remove Field</a>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group mb-4">
+                                    <label>Add Ingredients</label>
+                                    <table class="loadmore ingredient">
+                                        {% for ingredients in recipe.ingredients.ingredient %} {% for ingredient in ingredients %}
+
+                                        <td>
+                                            <span>Ingredient Name</span>
+                                            <input type="text" name="ingredient_name" value="{{ingredient}}" class="form-control" placeholder=" ">
+                                        </td>
+                                        <td>
+                                            <span>Ingredient Amount</span> {% for value in ingredients.values %}
+
+                                            <input type="text" class="form-control" name="ingredient_amount" value="{{ value }}" placeholder=" "> {% endfor %}
+
+                                        </td>
+                                        {% endfor %} {% endfor %}
+
+                                        <tr class="load-item">
+
+                                        </tr>
+
+                                    </table>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="addIngredients()">Add Field</a>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="removeIngredients()">Remove Field</a>
+
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group mb-4">
+                                    <label>Add Nutrition</label>
+                                    <table class="loadmore nutrition">
+                                        {% for nutritions in recipe.nutritions.nutrition %} {% for nutrition in nutritions %}
+
+                                        <tr class="load-item">
+                                            <td>
+                                                <input type="text" class="form-control" value="{{ nutrition }}" name="nutrition_name" placeholder=" ">
+                                            </td>
+                                            <td>
+                                                {% for value in nutritions.values %}
+                                                <input type="text" class="form-control" value="{{ value }}" name="nutrition_amount" placeholder=" "> {% endfor %}
+
+                                            </td>
+                                        </tr>
+
+
+                                        {% endfor %} {% endfor %}
+
+
+                                    </table>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="addNutritions()">Add Field</a>
+                                    <a class="btn btn-primary theme-btn load-more__btn" href="javascript:void(0)" role="button" onclick="removeNutritions()">Remove Field</a>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-4">
+                                    <label>Peoples</label>
+                                    <input type="number" class="form-control ingredients-number" name="people" id="myNumber" value="{{ recipe.people}}" min="0" max="100">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-4">
+                                    <label>Cook Time</label>
+                                    <input type="number" class="form-control ingredients-number m-0" name="cooktime" id="myNumber" value="{{ recipe.cooktime }}" min="0" max="1000">
+                                    <span>Minutes</span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-primary theme-btn btn-style-one" type="submit"><span>Submit Recipe</span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function addDirections() {
+        let con = document.querySelector('.direction')
+        let ele = document.createElement('textarea')
+        ele.setAttribute('class', 'form-control load-item')
+        ele.setAttribute('id', 'exampleFormControlTextarea1')
+        ele.setAttribute('name', 'directions')
+        ele.setAttribute('placeholder', 'Write Here...')
+        ele.setAttribute('required', 'true')
+        ele.setAttribute('rows', '3')
+        con.appendChild(ele)
+    }
+
+    function removeDirections() {
+        let con = document.querySelector('.direction')
+        con.removeChild(con.lastChild);
+    }
+
+    function addIngredients() {
+        let con = document.querySelector('.ingredient')
+        let ele = document.createElement('tr')
+        ele.setAttribute('class', 'load-item')
+            /*let eleN = document.createElement('td')
+            let eleNS = document.createElement('span')
+            let eleNI = document.createElement('input')
+            eleNI.setAttribute('type','text')
+            eleNI.setAttribute('class','form-control')
+            eleNS.textContent = 'Ingredient Name'
+            eleN.appendChild(eleNS)
+            eleN.appendChild(eleNI)
+            let eleA = document.createElement('td')
+            let eleAS = document.createElement('span')
+            let eleAI = document.createElement('input')
+            eleAI.setAttribute('type','text')
+            eleAI.setAttribute('class','form-control')
+            eleAS.textContent = 'Ingredient Name'
+            eleA.appendChild(eleAS)
+            eleA.appendChild(eleAI)*/
+        ele.innerHTML = `
+        <td>
+            <span>Ingredient Name</span>
+            <input type="text" class="form-control" name="ingredient_name" placeholder=" ">
+        </td>
+        <td>
+            <span>Ingredient Amount</span>
+            <input type="text" class="form-control" name="ingredient_amount" placeholder=" ">
+        </td>
+        `
+        con.appendChild(ele)
+    }
+
+    function removeIngredients() {
+        let con = document.querySelector('.ingredient')
+        con.removeChild(con.lastChild);
+    }
+
+    function addNutritions() {
+        let con = document.querySelector('.nutrition')
+        let ele = document.createElement('tr')
+        ele.setAttribute('class', 'load-item')
+        ele.innerHTML = `
+        <td>
+            <input type="text" class="form-control" name="nutrition_name" placeholder=" ">
+        </td>
+        <td>
+            <input type="text" class="form-control" name="nutrition_amount" placeholder=" ">
+        </td>
+        `
+        con.appendChild(ele)
+    }
+
+    function removeNutritions() {
+        let con = document.querySelector('.nutrition')
+        con.removeChild(con.lastChild);
+    }
+
+    function addTag() {
+        let con = document.querySelector('.tagCon')
+        if (con.children.length < 4) {
+            let ele = document.createElement('input')
+            ele.setAttribute('type', 'text')
+            ele.setAttribute('name', 'tag')
+            ele.setAttribute('class', 'form-control')
+            ele.setAttribute('placeholder', 'pizza')
+            con.appendChild(ele)
+        } else {
+            let button = document.querySelector('.tag-button')
+            button.style.display = 'none'
+        }
+
+    }
+    let imgInp = document.getElementById('imgInp')
+    let place = document.getElementById('placeholder-img')
+    imgInp.onchange = evt => {
+        const [file] = imgInp.files
+        if (file) {
+            place.src = URL.createObjectURL(file)
+        }
+    }
+</script>
+
+
+
+{% endblock content %}

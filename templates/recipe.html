@@ -1,0 +1,259 @@
+{% extends 'main.html' %} {% block content %} {% load static %}
+
+<!-- Page Title -->
+<!-- <section class="page-title" style="background-image:url(/static/images/background/12.png)">
+    <div class="auto-container">
+        <h1>Recipes Single</h1>
+    </div>
+</section> -->
+<!--End Page Title-->
+
+<!--Sidebar Page Container-->
+<div class="sidebar-page-container recipes-details-area" style="padding-top: 145px;">
+    <div class="auto-container">
+        <div class="row clearfix">
+            <!-- Content Side -->
+            <div class="content-side col-lg-12 col-md-12 col-sm-12">
+                <div class="recipe-detail">
+                    <div class="inner-box">
+                        <div class="image">
+                            <img src="{{recipe.image.url}}" alt="" />
+                        </div>
+                        <div class="content" style="border: 1px solid #044040;">
+                            <div class="author-image">
+                                <img src="{{profile.profileimg.url}}" class="recipe-profile" alt="profile picture" />
+                            </div>
+                            <div class="category">{% for tag in recipe.tag.all%}
+                                <a href="/category/{{tag}}">{{ tag }}</a> {% endfor %}</div>
+                            <h2>{{ recipe.title|title }} <span style="font-size:23px;color:#414141;"><a href="/profile/{{ recipe.user}}" style="color:#414141;">By {{ recipe.user|title }}</a></span></h2>
+                            <div class="post">{{ recipe.date_created }} </div>
+                            <div class="rating">
+
+
+
+
+
+                                <span class="fa fa-star main-rate-button">
+                                    </span>
+                                <span class="fa fa-star main-rate-button"></span>
+                                <span class="fa fa-star main-rate-button"></span>
+                                <span class="fa fa-star main-rate-button"></span>
+                                <span class="fa fa-star main-rate-button"></span> &nbsp; <input type="hidden" value="{{ rating_avg.score__avg }}" class="main-rate" name="main-rate"> {{rating}} Review{{rating|pluralize}}
+
+
+
+                            </div>
+                            <div class="text">{{ recipe.description }}</div>
+                            <ul class="post-meta">
+                                <li><span class="icon flaticon-dish"></span>{{ recipe.ingredient_total }} ingredient{{ recipe.ingredient_total|pluralize }} </li>
+                                <li><span class="icon flaticon-clock-3"></span> {{ recipe.cooktime }} Min{{ recipe.cooktime|pluralize }}</li>
+                                <li><span class="icon flaticon-business-and-finance"></span>{{ recipe.people }} {{ recipe.people | pluralize:"Person,People" }}</li>
+                                <li><span class="icon flaticon-eye"></span>{{ recipe.views }} View{{ recipe.views|pluralize }}</li>
+                            </ul>
+                        </div>
+
+                        <div class="row clearfix">
+
+                            <div class="column col-lg-12">
+
+                                <div class="my-tab">
+                                    <ul class="nav nav-pills mb-5 text-center justify-content-center" id="pills-tab" role="tablist">
+
+                                        {% if recipe.video_url != None %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{recipe.video_url}}">See Video</a>
+                                        </li>
+                                        {% endif %} {% if recipe.user.user.username == request.user.username %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/edit/{{ recipe.id }} ">Edit</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/delete/{{ recipe.id}}">Delete</a>
+                                        </li>{% endif %}
+
+
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane show active">
+                                            <div class="row">
+
+                                                <div class="col-lg-6">
+                                                    <!-- Ingredients Block -->
+                                                    <div class="ingredients-block">
+                                                        <div class="block-inner">
+                                                            <h4>Ingredients</h4>
+                                                            <ul class="ingredients-list">
+                                                                {% for ingredients in recipe.ingredients.ingredient %} {% for ingredient in ingredients %}
+                                                                <li> <span> {% for value in  ingredients.values %}
+                                                                    {{ value }}
+                                                                  {% endfor %}<span> &nbsp;{{ ingredient }}  </li>
+                                                                {% endfor %}
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Nutrition Block -->
+                                                    <div class="ingredients-block">
+                                                        <div class="block-inner">
+                                                            <h4>Nutrition</h4>
+                                                            <ul class="nutrition-list">
+                                                                {% for nutritions in recipe.nutritions.nutrition %} 
+                                                
+                                                                {% for nutrition in nutritions %}
+
+                                                                <li>{{ nutrition }} <span> {% for value in  nutritions.values %}
+                                                                  {{ value }}
+                                                                {% endfor %}<span></li>
+                                                                {% endfor %}
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <!-- Ingredients Block -->
+                                                    <div class="ingredients-block">
+                                                        <div class="block-inner">
+                                                            <h4>Directions</h4>
+                                                            <ul class="direction-list">
+                                                                {% for direction in recipe.directions.direction %}
+                                                                <li><span>0{{ forloop.counter }}</span><br>{{direction}}</li>
+                                                                {% endfor %}
+
+
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                                            <!-- Comment Form -->
+                                            <div class="comment-form">
+                                                <div class="group-title">
+                                                    <h2>LEAVE A REPLY <small>(optional)</small></h2>
+                                                </div>
+                                                <!--Comment Form-->
+                                                <form method="POST" action="/recipe/{{ recipe.id }}/">
+                                                    {% csrf_token %}
+                                                    <div class="row clearfix">
+
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+                                                            <textarea name="body" placeholder="Message" class="form-control" maxlength="300"></textarea>
+                                                        </div>
+
+                                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 form-group">
+                                                            <div class="clearfix">
+                                                                <div class="pull-left">
+                                                                    <div class="rating">
+                                                                        Your Rate :
+                                                                        <span class="fa fa-star button-star checked" id="first" data-star-id="1"></span>
+                                                                        <span class="fa fa-star button-star checked" id="second" data-star-id="2"></span>
+                                                                        <span class="fa fa-star button-star checked" id="third" data-star-id="3"></span>
+                                                                        <span class="fa fa-star button-star checked" id="fourth" data-star-id="4"></span>
+                                                                        <span class="fa fa-star button-star checked" id="fifth" data-star-id="5"></span>
+                                                                        <input type="hidden" name="rating" class="button-star-rating" value="5">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="pull-right">
+                                                                    <button class="theme-btn comment-btn" type="submit" name="submit-form">Post Review</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- End Comment Form -->
+
+                                            <!-- Comments Area -->
+                                            <div class="comments-area">
+                                                {% for comment in recipe.comments.all %}
+                                                <div class="comment-box">
+                                                    <div class="comment">
+                                                        <div class="author-thumb"><img src="{{comment.profileimg.url}}" alt="">
+                                                            <p class="author-comment-name">{{ comment.user }}</p>
+                                                        </div>
+                                                        <div class="comment-info clearfix">
+                                                            <div class="comment-time">{{ comment.date_added }}</div>
+                                                        </div>
+                                                        <div class="text">{{ comment.body }}</div>
+
+                                                        {% if comment.user == request.user.username %}
+                                                        <div><a href="/deleteComment/{{comment.id}}/" class="load-more__btn">Delete</a></div>
+                                                        {% endif %}
+
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+                        <!-- Related Items -->
+                        <div class="related-items">
+                            <h4>You may also like</h4>
+
+                            <div class="row clearfix">
+
+                                <!-- Recipes Block -->
+
+                                {% for like in likes %}
+                                <div class="recipes-block style-two col-lg-4 col-md-6 col-sm-12">
+                                    <div class="inner-box">
+                                        <div class="image">
+                                            <a href="/recipe/{{like.id}}"><img src="{{like.image.url}}" alt="" /></a>
+                                        </div>
+                                        <div class="lower-content">
+                                            <div class="author-image">
+                                                <a href="/profile/{{like.user.user.username}}"><img src="{{like.user.profileimg.url}}" alt="" /></a>
+                                            </div>
+                                            <div class="category">{% for tag in like.tag.all%}
+                                                <a href="/category/{{tag}}">{{ tag }}</a> {% endfor %}</div>
+                                            <h4><a href="/recipe/{{like.id}}">{{ like.title | title }}</a></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+
+
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('load', () => {
+        let rate = Number(document.querySelector('.main-rate').value).toFixed(0)
+        let mainArray = document.querySelectorAll('.main-rate-button')
+        for (let i = 0; i <= rate; i++) {
+            mainArray[i].classList.add('checked')
+        }
+    })
+</script>
+
+
+{% endblock content %}

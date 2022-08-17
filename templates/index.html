@@ -1,0 +1,222 @@
+{% extends 'main.html' %} {% block content %} {% load static %}
+
+<!-- Banner Section -->
+<section class="banner-section-1">
+    <div class="main">
+        <img class="main-img" src="{% static 'images/background/main_bg.jpg' %}" alt="">
+    </div>
+    <div class="main-header-post">
+        {% if request.user.is_authenticated %}
+        <h1 style="color: #333333 !important;">Welcome, {{request.user.username | title}} </h1>
+        <p style="color: #333333 !important;">A good recipe is the first step to a good meal</p>
+        <a href="/recipes" class="theme-btn btn-style-one"><span class="txt">See all Posts</span></a> {% else %}
+        <h1 style="color: #333333 !important;">Welcome, User</h1>
+        <p style="color: #333333 !important;">A good recipe is the first step to a good meal</p>
+        <a href="/login" class="theme-btn btn-style-one"><span class="txt">Login</span></a> {% endif %}
+
+    </div>
+
+</section>
+<!--End Banner Section -->
+
+
+
+<!-- Trending Section -->
+<section class="trending-section my-4">
+    <div class="auto-container">
+        <div class="layer-one" style="background-image: url(/static/images/resource/category-pattern-1.png)"></div>
+        <div class="layer-two" style="background-image: url(/static/images/resource/category-pattern-1.png)"></div>
+        <div class="row clearfix">
+
+            <!-- Content Column -->
+            <div class="content-column col-lg-7 col-md-12 col-sm-12" style="display: grid;place-items:center;">
+                <div class="inner-column">
+                    <!-- Sec Title -->
+                    <div class="sec-title">
+                        <div class="title">TRENDING</div>
+                        <h1>{{ trend.title | title}}</h1>
+                        <div class="text">{{ trend.description|truncatechars:150 }}</div>
+
+
+                    </div>
+                    <a href="/recipe/{{trend.id}}" class="theme-btn btn-style-one"><span class="txt">Read Post</span></a>
+
+                </div>
+            </div>
+
+            <!-- Image Column -->
+            <div class="image-column col-lg-5 col-md-12 col-sm-12 align-middle">
+                <div class="inner-column">
+                    <div class="image">
+                        <img src="{{ trend.image.url }}" alt="" style="width: 100%;object-fit:cover;height:100%;max-height:500px;" />
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- End Trending Section -->
+
+<!-- Popular Recipes Section -->
+<section class="popular-recipes-section">
+    <div class="auto-container">
+        <!-- Sec Title -->
+        <div class="sec-title">
+            <div class="clearfix">
+                <div class="pull-left">
+                    <h2>Popular Recipes</h2>
+                </div>
+                <div class="pull-right">
+                    <a href="/recipes" class="theme-btn btn-style-one"><span class="txt">See all Post</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="outer-container">
+        <div class="row clearfix">
+            {% for popular in popularlist %}
+            <!-- Recipes Block -->
+            <div class="recipes-block  col-lg-3 col-md-6 col-sm-12 rounded">
+                <div class="card-group">
+                    <div class="card inner-box">
+
+                        <a href="/recipe/{{popular.id}}" class="image"><img src="{{ popular.image.url }}" class="card-img-top image" alt="" /></a>
+
+                        <div class="card-body" style="position:relative;">
+                            <div class="author-image postion-absolute" style="top:-30px;left:10px;position:absolute;border-radius:100%;">
+                                <a href="/profile/{{popular.user.username }} "><img src="{{ popular.user.profileimg.url }}" style="width:50px ;height:50px;border-radius:100%;" alt="" /></a>
+                            </div>
+                            <div class="category px-4">{% for tag in popular.tag.all%}
+                                <a href="/category/{{tag}}">{{ tag | upper}}</a> {% endfor %}</div>
+                            <h4 class="card-title"><a href="/recipe/{{popular.id}}">{{ popular.title| title }}</a></h4>
+                            <p class="card-text">{{ popular.description|truncatechars:150 }}</p>
+
+
+                            <div class="container" style="width:100%;">
+                                <div class="row">
+                                    <div class="col-12 text-center"><span class="icon flaticon-dish"></span>{{ popular.ingredient_total }} Ingredient{{ popular.ingredient_total|pluralize }}</div>
+                                    <div class="col-6 text-center"><span class="icon flaticon-clock-3"></span>{{ popular.cooktime }} Min{{ popular.cooktime|pluralize }}</div>
+                                    <div class="col-6 text-center"><span class="icon flaticon-business-and-finance"></span>{{ popular.people }} {{ popular.people | pluralize:"Person,People" }}</div>
+
+                                </div>
+                            </div>
+                            <p class="card-text"><small class="text-muted">{{ popular.date_created }}</small></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {% endfor %}
+
+
+
+        </div>
+    </div>
+</section>
+<!-- End Popular Recipes Section -->
+
+<!-- Trending Recipes Section -->
+<section class="trending-recipes-section">
+    <div class="auto-container">
+        <!-- Sec Title -->
+        <div class="sec-title">
+            <div class="clearfix">
+                <div class="pull-left">
+                    <h2>Trending Recipes</h2>
+                </div>
+                <div class="pull-right">
+                    <a href="/recipes" class="theme-btn btn-style-one"><span class="txt">See all Post</span></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row clearfix">
+
+            {% for trend in trending %}
+            <!-- Recipes Block -->
+            <div class="recipes-block style-two col-lg-4 col-md-6 col-sm-12 rounded">
+                <div class="inner-box rounded" style="box-shadow:1px 1px 3px rgba(0, 0, 0, 0.25);">
+                    <div class="image">
+                        <a href="/recipe/{{trend.id}}/"><img src="{{ trend.image.url }}" alt="" /></a>
+                    </div>
+                    <div class="lower-content">
+                        <div class="author-image">
+                            <a href="/profile/{{trend.user.username}}/"><img src="{{ trend.user.profileimg.url}} " alt="" /></a>
+                        </div>
+                        <div class="category">{% for tag in trend.tag.all%}
+                            <a href="/category/{{tag}}">{{ tag }}</a> {% endfor %}</div>
+                        <h4>
+                            <a href="/recipe/{{trend.id}}/">{{ trend.title | title}}</a>
+                        </h4>
+                        <div class="text">{{ trend.description|truncatechars:150 }}</div>
+                        <ul class="post-meta">
+                            <li><span class="icon flaticon-dish"></span>{{ trend.ingredient_total }} Ingredient{{ trend.ingredient_total|pluralize }}</li>
+                            <li><span class="icon flaticon-clock-3"></span>{{ trend.cooktime }} Min{{ trend.cooktime|pluralize }}</li>
+                            <li><span class="icon flaticon-business-and-finance"></span>{{ trend.people }} {{ trend.people | pluralize:"Person,People" }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+
+
+        </div>
+
+    </div>
+</section>
+<!-- End Trending Recipes Section -->
+
+
+<!-- Entertaining Section -->
+<section class="entertaining-section">
+    <div class="auto-container">
+        <!-- Sec Title -->
+        <div class="sec-title centered">
+            <h2>Entertaining</h2>
+        </div>
+
+        <div class="row clearfix">
+            {% for entertain in entertaining %}
+            <!-- Entertaining Block -->
+            <div class="entertaining-block col-lg-3 col-md-6 col-sm-12">
+                <div class="inner-box">
+                    <div class="image">
+                        <a href="/recipe/{{entertain.id}}l"><img src="{{ entertain.image.url }}" alt="" /></a>
+                    </div>
+                    <div class="lower-content">
+                        <ul class="post-meta">
+                            <li><span class="icon "></span>{{ entertain.date_created }}</li>
+                            <li><span class="icon flaticon-comment"></span>{{ entertain.comments.count }}</li>
+
+                        </ul>
+                        <h4><a href="/recipe/{{entertain.id}}">{{ entertain.title | title }}</a></h4>
+                        <a href="/recipe/{{entertain.id}}" class="theme-btn read-more">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <h1> EMPTY </h1>
+            {% endfor %}
+
+
+
+
+        </div>
+
+    </div>
+</section>
+<!-- End Entertaining Section -->
+
+
+
+
+
+
+{% endblock content %}
