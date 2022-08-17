@@ -1,0 +1,1 @@
+web gunicorn recipa.wsgi:application --log-file -
